@@ -4,8 +4,13 @@ import Footer from "./components/Footer";
 import ModalTicket from "./components/Main/ModalTicket";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { loadAccount, loadChainId, loadProvider, loadLottery} from "./store/interaction";
-import config from './config.json'
+import {
+  loadAccount,
+  loadChainId,
+  loadProvider,
+  loadLottery,
+} from "./store/interaction";
+import config from "./config.json";
 import { ethers } from "ethers";
 
 const styles = {
@@ -37,18 +42,7 @@ const App = () => {
     });
 
     const lotteryAddress = config[chainId].address;
-    const lottery = await loadLottery(provider, lotteryAddress, dispatch)
-    console.log("Lottery", lottery)
-
-    const ownerContract = await lottery.owner();
-    console.log("Owner Contract", ownerContract)
-
-    const ticketPrice = await lottery.ticketPrice();
-    console.log("Remaining Tickets", ethers.utils.formatEther(ticketPrice))
-
-    const tiketcs = await lottery.getTickets();
-    console.log("List of users joined", tiketcs)
-
+    await loadLottery(provider, lotteryAddress, dispatch);
   };
 
   useEffect(() => {

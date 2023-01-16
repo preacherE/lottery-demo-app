@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import LOTTERY_ABI from '../abi/Lottery.json';
+import LOTTERY_ABI from "../abi/Lottery.json";
 
 export const loadProvider = (dispatch) => {
   const connection = new ethers.providers.Web3Provider(window.ethereum);
@@ -54,4 +54,42 @@ export const loadLottery = async (provider, address, dispatch) => {
   });
 
   return lottery;
+};
+
+export const buyTicket = async (
+  provider,
+  lottery,
+  account,
+  amount,
+  dispatch
+) => {
+  let transaction, result;
+
+  dispatch({
+    type: "BUY_TICKET_REQUEST",
+  });
+
+  try {
+    const signer = await provider.getSigner();
+    const overrides = {
+      from: account,
+      value: ethers.utils.parseUnits(amount.toString(), 18),
+    };
+
+    const connectLottery = lottery.connect(signer);
+
+    transaction = await connectLottery.buyTickets(overrides);
+
+    result = await transaction.wait();
+
+    dispatch({
+      type: "BUY_TICKET_SUCCESS",
+      result: result,
+    });
+  } catch (error) {
+    dispatch({
+      type: "BUY_TICKET_FAILED",
+    });
+    console.log(error);
+  }
 };

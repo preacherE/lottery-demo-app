@@ -2,10 +2,11 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 
-import { provider } from "./reducers";
+import { provider, lottery } from "./reducers";
 
 const reducers = combineReducers({
   provider,
+  lottery
 });
 
 const initialState = {};

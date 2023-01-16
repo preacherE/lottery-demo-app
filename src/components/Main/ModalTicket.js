@@ -3,8 +3,9 @@ import closeIcon from "./close.svg";
 import IconButton from "@mui/material/IconButton";
 import smallTicket from "./smallTicketIcon.svg";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import config from "../../config.json";
+import { buyTicket } from "../../store/interaction";
 import { useSelector, useDispatch } from "react-redux";
 
 const styles = {
@@ -28,13 +29,16 @@ const ModalTicket = (props) => {
   const dispatch = useDispatch();
   const provider = useSelector((state) => state.provider.connection);
   const balance = useSelector((state) => state.provider.balance);
+  const account = useSelector((state) => state.provider.account);
   const chainId = useSelector((state) => state.provider.chainId);
+  const lottery = useSelector((state) => state.lottery.contract);
+
   const { openModal, handlModaleClose } = props;
   const [amount, setAmount] = useState(0);
   const [amountEth, setAmountEth] = useState(0);
   const [errorBalance, setErrorBalance] = useState(false);
 
-  const handleBuy = (e) => {
+  const handleInput = (e) => {
     e.preventDefault();
     setAmount(e.target.value);
     if (e.target.value * config[chainId].ticketPrice > balance) {
@@ -50,6 +54,11 @@ const ModalTicket = (props) => {
     setAmountEth(0);
     setErrorBalance(false);
     handlModaleClose();
+  };
+
+  const handleBuy = (e) => {
+    e.preventDefault();
+    buyTicket(provider, lottery, account, amountEth, dispatch);
   };
 
   return (
@@ -77,7 +86,7 @@ const ModalTicket = (props) => {
             dir="rtl"
             className={styles.modalFormInput}
             placeholder="0"
-            onChange={(e) => handleBuy(e)}
+            onChange={(e) => handleInput(e)}
           />
           <p className={styles.text_3}>
             <span>{amountEth}</span> ETH
@@ -114,7 +123,11 @@ const ModalTicket = (props) => {
           <p className={styles.text_5}>
             Anda membayar: <span>{amountEth}</span> ETH
           </p>
-          <Button variant="contained" className={styles.buttonFull}>
+          <Button
+            variant="contained"
+            className={styles.buttonFull}
+            onClick={(e) => handleBuy(e)}
+          >
             Beli Undian
           </Button>
         </div>
