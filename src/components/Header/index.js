@@ -2,7 +2,7 @@ import logo from "./logo.svg";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Blockies from "react-blockies";
-import { loadAccount, loadChainId } from "../../store/interaction";
+import { loadAccount } from "../../store/interaction";
 import { useDispatch, useSelector } from "react-redux";
 import config from "../../config.json";
 
@@ -21,7 +21,6 @@ const Header = () => {
   const chainId = useSelector((state) => state.provider.chainId);
 
   const handleConnect = async () => {
-    await loadChainId(provider, dispatch);
     await loadAccount(provider, dispatch);
   };
 

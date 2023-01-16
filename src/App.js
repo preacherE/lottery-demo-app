@@ -4,7 +4,9 @@ import Footer from "./components/Footer";
 import ModalTicket from "./components/Main/ModalTicket";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { loadAccount, loadProvider } from "./store/interaction";
+import { loadAccount, loadChainId, loadProvider, loadLottery} from "./store/interaction";
+import config from './config.json'
+import { ethers } from "ethers";
 
 const styles = {
   app: `min-h-screen flex flex-col bg-[#1B2D5F]`,
@@ -24,6 +26,7 @@ const App = () => {
 
   const loadBlockchainData = async () => {
     const provider = loadProvider(dispatch);
+    const chainId = await loadChainId(provider, dispatch);
 
     window.ethereum.on("chainChanged", () => {
       window.location.reload();
@@ -32,6 +35,20 @@ const App = () => {
     window.ethereum.on("accountsChanged", () => {
       loadAccount(provider, dispatch);
     });
+
+    const lotteryAddress = config[chainId].address;
+    const lottery = await loadLottery(provider, lotteryAddress, dispatch)
+    console.log("Lottery", lottery)
+
+    const ownerContract = await lottery.owner();
+    console.log("Owner Contract", ownerContract)
+
+    const ticketPrice = await lottery.ticketPrice();
+    console.log("Remaining Tickets", ethers.utils.formatEther(ticketPrice))
+
+    const tiketcs = await lottery.getTickets();
+    console.log("List of users joined", tiketcs)
+
   };
 
   useEffect(() => {

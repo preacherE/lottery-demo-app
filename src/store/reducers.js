@@ -12,3 +12,10 @@ export const provider = (state = {}, action) => {
       return state;
   }
 };
+
+export const lottery = (state = {}, action) => {
+  switch (action.type) {
+    case "LOTTERY_LOADED":
+      return {...state, lottery: action.lottery}
+  }
+}

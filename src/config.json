@@ -1,5 +1,7 @@
 {
   "5": {
-    "explorerURL": "https://goerli.etherscan.io/"
+    "address":"0xB203b04bB8FB6620861b83B6BEC07abB1BEb85b0",
+    "explorerURL": "https://goerli.etherscan.io/",
+    "ticketPrice": 0.01
   }
 }
