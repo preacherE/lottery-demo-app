@@ -1,24 +1,43 @@
-import Header from './components/Header';
-import Main from './components/Main';
-import Footer from './components/Footer';
-import ModalTicket from './components/Main/ModalTicket';
-import { useState } from 'react';
+import Header from "./components/Header";
+import Main from "./components/Main";
+import Footer from "./components/Footer";
+import ModalTicket from "./components/Main/ModalTicket";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { loadAccount, loadProvider } from "./store/interaction";
 
 const styles = {
   app: `min-h-screen flex flex-col bg-[#1B2D5F]`,
-}
+};
 
 const App = () => {
+  const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const handlModaleOpen = () => setOpenModal(true);
   const handlModaleClose = () => setOpenModal(false);
-  
+
   const props = {
     openModal,
     handlModaleOpen,
-    handlModaleClose
-  }
-  
+    handlModaleClose,
+  };
+
+  const loadBlockchainData = async () => {
+    const provider = loadProvider(dispatch);
+
+    window.ethereum.on("chainChanged", () => {
+      window.location.reload();
+    });
+
+    window.ethereum.on("accountsChanged", () => {
+      loadAccount(provider, dispatch);
+    });
+  };
+
+  useEffect(() => {
+    loadBlockchainData();
+  });
+
   return (
     <div className={styles.app}>
       <Header />
@@ -27,6 +46,6 @@ const App = () => {
       <Footer />
     </div>
   );
-}
+};
 
 export default App;
