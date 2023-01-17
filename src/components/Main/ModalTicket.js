@@ -1,5 +1,5 @@
 import Modal from "@mui/material/Modal";
-import AlertTransaction from './Alert'
+import AlertTransaction from "./Alert";
 import closeIcon from "./close.svg";
 import IconButton from "@mui/material/IconButton";
 import smallTicket from "./smallTicketIcon.svg";
@@ -71,8 +71,8 @@ const ModalTicket = (props) => {
 
   const childProps = {
     setOpen,
-    open
-  }
+    open,
+  };
 
   return (
     <Modal open={openModal} onClose={handleInitialState}>
@@ -87,7 +87,7 @@ const ModalTicket = (props) => {
             <img src={closeIcon} alt="close" />
           </IconButton>
         </div>
-        <AlertTransaction {...childProps}/>
+        <AlertTransaction {...childProps} />
         <div className={styles.modalFormHeader}>
           <p className={styles.text_1}>Beli:</p>
           <p className={styles.text_2}>
@@ -121,15 +121,9 @@ const ModalTicket = (props) => {
           )}
         </div>
         <div className={styles.modalFooter}>
-          {chainId ? (
-            <p className={styles.text_5}>
-              Harga Per Undian: <span>{config[chainId].ticketPrice}</span> ETH
-            </p>
-          ) : (
-            <p className={styles.text_5}>
-              Harga Per Undian: <span>0.01</span> ETH
-            </p>
-          )}
+          <p className={styles.text_5}>
+            Harga Per Undian: <span>0.01</span> ETH
+          </p>
 
           <p className={styles.text_5}>
             Anda membeli: <span>{amount}</span> Tiket Undian
@@ -154,7 +148,6 @@ const ModalTicket = (props) => {
               Connect Wallet
             </Button>
           )}
-          
         </div>
       </div>
     </Modal>

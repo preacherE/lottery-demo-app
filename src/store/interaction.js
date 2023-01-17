@@ -66,7 +66,7 @@ export const buyTicket = async (
   let transaction, result;
 
   dispatch({
-    type: "BUY_TICKET_REQUEST",
+    type: "TRANSACTION_REQUEST",
   });
 
   try {
@@ -80,44 +80,82 @@ export const buyTicket = async (
 
     transaction = await connectLottery.buyTickets(overrides);
 
+    dispatch({
+      type: "TRANSACTION_PENDING",
+      result: result,
+    });
+
     result = await transaction.wait();
 
     dispatch({
-      type: "BUY_TICKET_SUCCESS",
+      type: "TRANSACTION_SUCCESS",
       result: result,
     });
   } catch (error) {
     dispatch({
-      type: "BUY_TICKET_FAILED",
+      type: "TRANSACTION_FAILED",
     });
     console.log(error);
   }
 };
 
 export const checkWallet = async (provider, lottery, account, dispatch) => {
-  let transaction, result
+  let transaction, result;
 
-  try{
+  try {
     const signer = await provider.getSigner(account);
     const connectLottery = lottery.connect(signer);
 
     const isWinner = await connectLottery.isWinner();
-    
+
     transaction = await connectLottery.purchaseLimits(account);
     result = await transaction;
 
     dispatch({
       type: "CHECK_WALLET",
       isWinner,
-      ticketBought: Number(result)
-    })
+      ticketBought: Number(result),
+    });
 
     return {
       isWinner,
-      ticketBought: Number(result)
-    }
-
+      ticketBought: Number(result),
+    };
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
+
+export const claimRewards = async (provider, lottery, account, dispatch) => {
+  let transaction, result;
+
+  dispatch({
+    type: "TRANSACTION_REQUEST",
+  });
+
+  try {
+    const signer = await provider.getSigner(account);
+    const connectLottery = lottery.connect(signer);
+
+    transaction = await connectLottery.withdrawWinnings();
+
+    dispatch({
+      type: "TRANSACTION_PENDING",
+      result: result,
+    });
+
+    result = await transaction;
+    
+    dispatch({
+      type: "TRANSACTION_SUCCESS",
+      result: result,
+    });
+
+    return {};
+  } catch (error) {
+    dispatch({
+      type: "TRANSACTION_FAILED",
+    });
+    console.log(error);
+  }
+};

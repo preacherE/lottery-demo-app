@@ -9,18 +9,17 @@ const AlertTransaction = (props) => {
   const isSuccessful = useSelector(
     (state) => state.lottery.transaction.isSuccessful
   );
+  const isRequest = useSelector((state) => state.lottery.transaction.isRequest);
   const isPending = useSelector((state) => state.lottery.transaction.isPending);
   const isError = useSelector((state) => state.lottery.transaction.isError);
   const { open, setOpen } = props;
 
   return (
     <div>
-      {isPending ? (
+      {isRequest ? (
         <div className={styles.alert}>
           <Collapse in={open}>
-            <Alert
-              severity="info"
-            >
+            <Alert severity="info">
               <strong>Waiting For Approval</strong>
             </Alert>
           </Collapse>
@@ -38,6 +37,14 @@ const AlertTransaction = (props) => {
             </Alert>
           </Collapse>
         </div>
+      ) : isPending ? (
+        <div className={styles.alert}>
+          <Collapse in={open}>
+            <Alert severity="info">
+              <strong>Processing the transaction</strong>
+            </Alert>
+          </Collapse>
+        </div>
       ) : !isPending && isSuccessful ? (
         <div className={styles.alert}>
           <Collapse in={open}>
@@ -52,7 +59,7 @@ const AlertTransaction = (props) => {
           </Collapse>
         </div>
       ) : (
-        <div className={styles.alert}></div>
+        <div></div>
       )}
     </div>
   );

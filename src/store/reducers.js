@@ -32,15 +32,24 @@ export const lottery = (state = DEFAULT_LOTTERY_STATE, action) => {
   switch (action.type) {
     case "LOTTERY_LOADED":
       return { ...state, contract: action.lottery };
-    case "BUY_TICKET_REQUEST":
+    case "TRANSACTION_REQUEST":
       return {
         ...state,
         transaction: {
-          isPending: true,
+          isRequest: true,
           isSuccessful: false,
         },
       };
-    case "BUY_TICKET_SUCCESS":
+      case "TRANSACTION_PENDING":
+        return {
+          ...state,
+          transaction: {
+            isPending: true,
+            isSuccessful: false,
+          },
+          result: action.result,
+        };
+    case "TRANSACTION_SUCCESS":
       return {
         ...state,
         transaction: {
@@ -49,7 +58,7 @@ export const lottery = (state = DEFAULT_LOTTERY_STATE, action) => {
         },
         result: action.result,
       };
-    case "BUY_TICKET_FAILED":
+    case "TRANSACTION_FAILED":
       return {
         ...state,
         transaction: {

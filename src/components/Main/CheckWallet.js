@@ -1,9 +1,12 @@
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { Collapse } from "@mui/material";
+import AlertTransaction from "./Alert";
+
+import { claimRewards } from "../../store/interaction";
 
 const styles = {
   section: `w-full pb-[30px] flex justify-center`,
@@ -15,10 +18,15 @@ const styles = {
 };
 
 const CheckWallet = () => {
+  const dispatch = useDispatch();
   const isWinner = useSelector((state) => state.lottery.checkWallet.isWinner);
+  const provider = useSelector((state) => state.provider.connection);
+  const lottery = useSelector((state) => state.lottery.contract);
+  const account = useSelector((state) => state.provider.account);
   const [canClaim, setCanClaim] = useState(false);
   const [notWinner, setNotWinner] = useState(false);
   const [closeBtn, setCloseBtn] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleCheckWinning = async () => {
     if (isWinner) {
@@ -29,10 +37,22 @@ const CheckWallet = () => {
     }
   };
 
+  const handleClaim = async () => {
+    claimRewards(provider, lottery, account, dispatch);
+    setOpen(true);
+    console.log("Rewards Claimed");
+  };
+
+  const childProps = {
+    setOpen,
+    open,
+  };
+
   return (
     <section className={styles.section}>
       <Card className={styles.card}>
         <CardContent>
+          <AlertTransaction {...childProps} />
           <p className={styles.text_1}>Cek Apakah Anda Menang</p>
           <Collapse in={closeBtn}>
             <Button
@@ -47,8 +67,8 @@ const CheckWallet = () => {
             {notWinner && (
               <div>
                 <h1>
-                  Anda belum menang, beli lebih banyak <strong>undian</strong> untuk meningkatkan
-                  peluang menang anda!
+                  Anda belum menang, beli lebih banyak <strong>undian</strong>{" "}
+                  untuk meningkatkan peluang menang anda!
                 </h1>
                 <p className={styles.text_2}>Tersisa</p>
                 <p className={styles.text_3}>2 Jam 30 Menit</p>
@@ -60,7 +80,7 @@ const CheckWallet = () => {
               <Button
                 variant="contained"
                 className={styles.button}
-                onClick={handleCheckWinning}
+                onClick={handleClaim}
               >
                 claim Rewards
               </Button>
