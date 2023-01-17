@@ -13,7 +13,22 @@ export const provider = (state = {}, action) => {
   }
 };
 
-export const lottery = (state = {transaction: {isSuccessful: false}}, action) => {
+const DEFAULT_LOTTERY_STATE = {
+  contract: {},
+  transaction: {
+    isSuccessful: false,
+  },
+  checkWallet: {
+    isWinner: false,
+    ticketBought: 0,
+  },
+  tickets: {
+    loaded: false,
+    data: [],
+  },
+};
+
+export const lottery = (state = DEFAULT_LOTTERY_STATE, action) => {
   switch (action.type) {
     case "LOTTERY_LOADED":
       return { ...state, contract: action.lottery };
@@ -43,6 +58,14 @@ export const lottery = (state = {transaction: {isSuccessful: false}}, action) =>
           isError: true,
         },
       };
+    case "CHECK_WALLET":
+      return {
+        ...state,
+        checkWinner: {
+          isWinner: action.isWinner,
+          ticketBought: action.ticketBought
+        }
+      }
     default:
       return state;
   }

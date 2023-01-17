@@ -93,3 +93,31 @@ export const buyTicket = async (
     console.log(error);
   }
 };
+
+export const checkWallet = async (provider, lottery, account, dispatch) => {
+  let transaction, result
+
+  try{
+    const signer = await provider.getSigner(account);
+    const connectLottery = lottery.connect(signer);
+
+    const isWinner = await connectLottery.isWinner();
+    
+    transaction = await connectLottery.purchaseLimits(account);
+    result = await transaction;
+
+    dispatch({
+      type: "CHECK_WALLET",
+      isWinner,
+      ticketBought: Number(result)
+    })
+
+    return {
+      isWinner,
+      ticketBought: Number(result)
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+}

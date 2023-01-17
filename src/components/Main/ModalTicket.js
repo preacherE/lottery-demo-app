@@ -59,14 +59,10 @@ const ModalTicket = (props) => {
     handlModaleClose();
   };
 
-  const handleTx = () => {
-    setOpen(true);
-  }
-
   const handleBuy = (e) => {
     e.preventDefault();
     buyTicket(provider, lottery, account, amountEth, dispatch);
-    handleTx();
+    setOpen(true);
   };
 
   const handleConnect = async () => {
