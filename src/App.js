@@ -11,7 +11,6 @@ import {
   loadLottery,
 } from "./store/interaction";
 import config from "./config.json";
-import { ethers } from "ethers";
 
 const styles = {
   app: `min-h-screen flex flex-col bg-[#1B2D5F]`,
@@ -22,6 +21,11 @@ const App = () => {
   const [openModal, setOpenModal] = useState(false);
   const handlModaleOpen = () => setOpenModal(true);
   const handlModaleClose = () => setOpenModal(false);
+  // const isSuccessful = useSelector(
+  //   (state) => state.lottery.transaction.isSuccessful
+  // );
+  // const isPending = useSelector((state) => state.lottery.transaction.isPending);
+  // const isError = useSelector((state) => state.lottery.transaction.isError);
 
   const props = {
     openModal,

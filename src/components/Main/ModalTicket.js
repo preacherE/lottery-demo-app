@@ -1,12 +1,14 @@
 import Modal from "@mui/material/Modal";
+import AlertTransaction from './Alert'
 import closeIcon from "./close.svg";
 import IconButton from "@mui/material/IconButton";
 import smallTicket from "./smallTicketIcon.svg";
 import Button from "@mui/material/Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import config from "../../config.json";
 import { buyTicket } from "../../store/interaction";
 import { useSelector, useDispatch } from "react-redux";
+import { loadAccount } from "../../store/interaction";
 
 const styles = {
   modalBox: `absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-w-[380px] w-full bg-[#1B2D5F] p-[24px] shadow`,
@@ -32,6 +34,7 @@ const ModalTicket = (props) => {
   const account = useSelector((state) => state.provider.account);
   const chainId = useSelector((state) => state.provider.chainId);
   const lottery = useSelector((state) => state.lottery.contract);
+  const [open, setOpen] = useState(false);
 
   const { openModal, handlModaleClose } = props;
   const [amount, setAmount] = useState(0);
@@ -56,10 +59,24 @@ const ModalTicket = (props) => {
     handlModaleClose();
   };
 
+  const handleTx = () => {
+    setOpen(true);
+  }
+
   const handleBuy = (e) => {
     e.preventDefault();
     buyTicket(provider, lottery, account, amountEth, dispatch);
+    handleTx();
   };
+
+  const handleConnect = async () => {
+    await loadAccount(provider, dispatch);
+  };
+
+  const childProps = {
+    setOpen,
+    open
+  }
 
   return (
     <Modal open={openModal} onClose={handleInitialState}>
@@ -74,6 +91,7 @@ const ModalTicket = (props) => {
             <img src={closeIcon} alt="close" />
           </IconButton>
         </div>
+        <AlertTransaction {...childProps}/>
         <div className={styles.modalFormHeader}>
           <p className={styles.text_1}>Beli:</p>
           <p className={styles.text_2}>
@@ -123,13 +141,24 @@ const ModalTicket = (props) => {
           <p className={styles.text_5}>
             Anda membayar: <span>{amountEth}</span> ETH
           </p>
-          <Button
-            variant="contained"
-            className={styles.buttonFull}
-            onClick={(e) => handleBuy(e)}
-          >
-            Beli Undian
-          </Button>
+          {account ? (
+            <Button
+              variant="contained"
+              className={styles.buttonFull}
+              onClick={(e) => handleBuy(e)}
+            >
+              Beli Undian
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              className={styles.buttonFull}
+              onClick={handleConnect}
+            >
+              Connect Wallet
+            </Button>
+          )}
+          
         </div>
       </div>
     </Modal>

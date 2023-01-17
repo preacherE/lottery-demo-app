@@ -13,7 +13,7 @@ export const provider = (state = {}, action) => {
   }
 };
 
-export const lottery = (state = {}, action) => {
+export const lottery = (state = {transaction: {isSuccessful: false}}, action) => {
   switch (action.type) {
     case "LOTTERY_LOADED":
       return { ...state, contract: action.lottery };
