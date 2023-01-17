@@ -9,6 +9,7 @@ import {
   loadChainId,
   loadProvider,
   loadLottery,
+  loadTickets,
 } from "./store/interaction";
 import config from "./config.json";
 
@@ -41,7 +42,8 @@ const App = () => {
     });
 
     const lotteryAddress = config[chainId].address;
-    await loadLottery(provider, lotteryAddress, dispatch);
+    const lottery = await loadLottery(provider, lotteryAddress, dispatch);
+    await loadTickets(lottery, dispatch);
   };
 
   useEffect(() => {

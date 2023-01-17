@@ -99,32 +99,17 @@ export const buyTicket = async (
   }
 };
 
-export const checkWallet = async (provider, lottery, account, dispatch) => {
-  let transaction, result;
+export const loadTickets = async (lottery, dispatch) => {
 
-  try {
-    const signer = await provider.getSigner(account);
-    const connectLottery = lottery.connect(signer);
+  const tickets = await lottery.getTickets();
 
-    const isWinner = await connectLottery.isWinner();
+  dispatch({
+    type: "TICKETS_LOADED",
+    data: tickets
+  })
 
-    transaction = await connectLottery.purchaseLimits(account);
-    result = await transaction;
-
-    dispatch({
-      type: "CHECK_WALLET",
-      isWinner,
-      ticketBought: Number(result),
-    });
-
-    return {
-      isWinner,
-      ticketBought: Number(result),
-    };
-  } catch (error) {
-    console.log(error);
-  }
-};
+  return tickets
+}
 
 export const claimRewards = async (provider, lottery, account, dispatch) => {
   let transaction, result;
@@ -145,7 +130,7 @@ export const claimRewards = async (provider, lottery, account, dispatch) => {
     });
 
     result = await transaction;
-    
+
     dispatch({
       type: "TRANSACTION_SUCCESS",
       result: result,

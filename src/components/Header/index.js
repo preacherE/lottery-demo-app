@@ -2,7 +2,7 @@ import logo from "./logo.svg";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Blockies from "react-blockies";
-import { loadAccount, checkWallet } from "../../store/interaction";
+import { loadAccount } from "../../store/interaction";
 import { useDispatch, useSelector } from "react-redux";
 import config from "../../config.json";
 
@@ -11,7 +11,7 @@ const styles = {
   wrapper: `flex justify-between`,
   button: `bg-[#FF6D33] capitalize hover:bg-[#FF6D33] font-bold text-[13px]`,
   wallet: `flex items-center text-white m-px`,
-  blockies: `m-2`
+  blockies: `m-2`,
 };
 
 const Header = () => {
@@ -19,11 +19,9 @@ const Header = () => {
   const provider = useSelector((state) => state.provider.connection);
   const account = useSelector((state) => state.provider.account);
   const chainId = useSelector((state) => state.provider.chainId);
-  const lottery = useSelector((state) => state.lottery.contract);
 
   const handleConnect = async () => {
     await loadAccount(provider, dispatch);
-    await checkWallet(provider, lottery, account, dispatch);
   };
 
   return (

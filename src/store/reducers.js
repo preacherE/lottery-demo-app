@@ -18,12 +18,7 @@ const DEFAULT_LOTTERY_STATE = {
   transaction: {
     isSuccessful: false,
   },
-  checkWallet: {
-    isWinner: false,
-    ticketBought: 0,
-  },
   tickets: {
-    loaded: false,
     data: [],
   },
 };
@@ -40,15 +35,15 @@ export const lottery = (state = DEFAULT_LOTTERY_STATE, action) => {
           isSuccessful: false,
         },
       };
-      case "TRANSACTION_PENDING":
-        return {
-          ...state,
-          transaction: {
-            isPending: true,
-            isSuccessful: false,
-          },
-          result: action.result,
-        };
+    case "TRANSACTION_PENDING":
+      return {
+        ...state,
+        transaction: {
+          isPending: true,
+          isSuccessful: false,
+        },
+        result: action.result,
+      };
     case "TRANSACTION_SUCCESS":
       return {
         ...state,
@@ -67,14 +62,21 @@ export const lottery = (state = DEFAULT_LOTTERY_STATE, action) => {
           isError: true,
         },
       };
+    case "TICKETS_LOADED":
+      return {
+        ...state,
+        tickets: {
+          data: action.data,
+        },
+      };
     case "CHECK_WALLET":
       return {
         ...state,
         checkWinner: {
           isWinner: action.isWinner,
-          ticketBought: action.ticketBought
-        }
-      }
+          ticketBought: action.ticketBought,
+        },
+      };
     default:
       return state;
   }
