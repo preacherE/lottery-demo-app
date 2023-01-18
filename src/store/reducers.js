@@ -21,12 +21,21 @@ const DEFAULT_LOTTERY_STATE = {
   tickets: {
     data: [],
   },
+  draw: {
+    countdown: new Date(),
+  },
 };
 
 export const lottery = (state = DEFAULT_LOTTERY_STATE, action) => {
   switch (action.type) {
     case "LOTTERY_LOADED":
       return { ...state, contract: action.lottery };
+    case "EXPIRATION_LOADED":
+      return {
+        ...state,
+        expired: action.humanReadable,
+        miliseconds: action.miliseconds,
+      };
     case "TRANSACTION_REQUEST":
       return {
         ...state,

@@ -1,6 +1,8 @@
 {
     "adminWallets": [
         "0xD5bB7b414cdd212B994756C063aEC29A4DA05b5A",
-        "0x5E63ddAe9dAe73BE06cD45843B2036D58BF24BAA"
-    ]
+        "0x5E63ddAe9dAe73BE06cD45843B2036D58BF24BAA",
+        "0x02E105bC35ADF2eCc2B15AdB55a76ce510E21b4A"
+    ],
+    "initialRewards": 50175634
 }

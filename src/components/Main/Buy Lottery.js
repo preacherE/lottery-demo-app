@@ -1,6 +1,7 @@
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import Countdown from "react-countdown";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -21,6 +22,7 @@ const styles = {
 const BuyLottery = (props) => {
   const account = useSelector((state) => state.provider.account);
   const tickets = useSelector((state) => state.lottery.tickets.data);
+  const expired = useSelector((state) => state.lottery.expired);
 
   const [ticketBought, setTicketBought] = useState(0);
   const { handlModaleOpen } = props;
@@ -40,7 +42,9 @@ const BuyLottery = (props) => {
           <div className={styles.card_detail_1}>
             <p className={styles.text_1}>Beli Undian Sekarang!</p>
             <p className={styles.text_2}>Tersisa</p>
-            <p className={styles.text_3}>2 Jam 30 Menit</p>
+            <p className={styles.text_3}>
+              <Countdown date={Date.now() + 7200000} />
+            </p>
             <p className={styles.text_2}>untuk undian selanjutnya</p>
           </div>
           <div className={styles.card_detail_2}>
@@ -51,12 +55,10 @@ const BuyLottery = (props) => {
             ) : (
               <p className={styles.text_4}>Anda Memiliki: 0 Undian</p>
             )}
-            <p className={styles.text_5}>
-              Total Hadiah Saat Ini: Rp 50,780,998
-            </p>
-            <p className={styles.text_6}>
-              Undian Selanjutnya: 15 Jan, 20:00 WIB
-            </p>
+            {expired && (
+              <p className={styles.text_6}>Pengundian Selanjutnya: {expired}</p>
+            )}
+
             <Button
               variant="contained"
               className={styles.button}

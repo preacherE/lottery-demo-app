@@ -56,6 +56,25 @@ export const loadLottery = async (provider, address, dispatch) => {
   return lottery;
 };
 
+export const loadExpiration = async (lottery, dispatch) => {
+  const expiration = Number(await lottery.expiration());
+  const miliseconds = expiration * 1000;
+  const dateObjects = new Date();
+  const humanReadable = dateObjects.toLocaleString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  dispatch({
+    type: "EXPIRATION_LOADED",
+    humanReadable,
+    miliseconds,
+  });
+
+  return humanReadable;
+};
+
 export const buyTicket = async (
   provider,
   lottery,
@@ -100,16 +119,15 @@ export const buyTicket = async (
 };
 
 export const loadTickets = async (lottery, dispatch) => {
-
   const tickets = await lottery.getTickets();
 
   dispatch({
     type: "TICKETS_LOADED",
-    data: tickets
-  })
+    data: tickets,
+  });
 
-  return tickets
-}
+  return tickets;
+};
 
 export const claimRewards = async (provider, lottery, account, dispatch) => {
   let transaction, result;
@@ -136,7 +154,80 @@ export const claimRewards = async (provider, lottery, account, dispatch) => {
       result: result,
     });
 
-    return {};
+    return result;
+  } catch (error) {
+    dispatch({
+      type: "TRANSACTION_FAILED",
+    });
+    console.log(error);
+  }
+};
+
+export const drawWinner = async (provider, lottery, account, dispatch) => {
+  let transaction, result;
+
+  dispatch({
+    type: "TRANSACTION_REQUEST",
+  });
+
+  try {
+    const signer = await provider.getSigner(account);
+    const connectLottery = lottery.connect(signer);
+
+    transaction = await connectLottery.drawWinnerTicket();
+
+    dispatch({
+      type: "TRANSACTION_PENDING",
+      result: result,
+    });
+
+    result = await transaction;
+
+    dispatch({
+      type: "TRANSACTION_SUCCESS",
+      result: result,
+    });
+
+    return result;
+  } catch (error) {
+    dispatch({
+      type: "TRANSACTION_FAILED",
+    });
+    console.log(error);
+  }
+};
+
+export const withdrawCommision = async (
+  provider,
+  lottery,
+  account,
+  dispatch
+) => {
+  let transaction, result;
+
+  dispatch({
+    type: "TRANSACTION_REQUEST",
+  });
+
+  try {
+    const signer = await provider.getSigner(account);
+    const connectLottery = lottery.connect(signer);
+
+    transaction = await connectLottery.withdrawCommission();
+
+    dispatch({
+      type: "TRANSACTION_PENDING",
+      result: result,
+    });
+
+    result = await transaction;
+
+    dispatch({
+      type: "TRANSACTION_SUCCESS",
+      result: result,
+    });
+
+    return result;
   } catch (error) {
     dispatch({
       type: "TRANSACTION_FAILED",

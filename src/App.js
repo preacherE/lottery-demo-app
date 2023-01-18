@@ -11,6 +11,7 @@ import {
   loadProvider,
   loadLottery,
   loadTickets,
+  loadExpiration,
 } from "./store/interaction";
 import config from "./config.json";
 
@@ -33,7 +34,7 @@ const App = () => {
     handlModaleClose,
     openModalAdmin,
     handleModalAdminOpen,
-    hadnleModalAdminClose
+    hadnleModalAdminClose,
   };
 
   const loadBlockchainData = async () => {
@@ -51,6 +52,7 @@ const App = () => {
     const lotteryAddress = config[chainId].address;
     const lottery = await loadLottery(provider, lotteryAddress, dispatch);
     await loadTickets(lottery, dispatch);
+    await loadExpiration(lottery, dispatch);
   };
 
   useEffect(() => {
@@ -59,7 +61,7 @@ const App = () => {
 
   return (
     <div className={styles.app}>
-      <Header {...props}/>
+      <Header {...props} />
       <Main {...props} />
       <ModalTicket {...props} />
       <ModalAdmin {...props} />

@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Collapse } from "@mui/material";
 import AlertTransaction from "./Alert";
 
@@ -57,6 +57,11 @@ const CheckWallet = () => {
     open,
   };
 
+  useEffect(() => {
+    setCanClaim(false);
+    setNotWinner(false);
+  }, [account]);
+
   return (
     <section className={styles.section}>
       <Card className={styles.card}>
@@ -76,10 +81,9 @@ const CheckWallet = () => {
             {notWinner && (
               <div className={styles.content}>
                 <p className={styles.text_1}>
-                  Anda belum menang! Beli tiket untuk ikut undian.
+                  Anda belum menang! Beli undian untuk meningkatkan peluang
+                  menang anda!
                 </p>
-                <p className={styles.text_1}>Undian Selanjutnya</p>
-                <p className={styles.text_1}>2 Jam 30 Menit</p>
               </div>
             )}
           </div>

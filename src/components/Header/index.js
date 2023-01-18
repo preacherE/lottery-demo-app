@@ -23,9 +23,18 @@ const Header = (props) => {
   const account = useSelector((state) => state.provider.account);
   const chainId = useSelector((state) => state.provider.chainId);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [network, setIsNetwork] = useState(false);
   const admins = statis.adminWallets;
 
   const { handleModalAdminOpen } = props;
+
+  const handleSwitchNetwork = async () => {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: "0x5" }], // chainId must be in hexadecimal numbers
+    });
+    setIsNetwork(true);
+  };
 
   const handleConnect = async () => {
     await loadAccount(provider, dispatch);
@@ -41,7 +50,16 @@ const Header = (props) => {
       }
     };
     checkAdmin();
-  }, [admins, account]);
+
+    const checkNetwork = async () => {
+      if (chainId !== 5) {
+        setIsNetwork(false);
+      } else {
+        setIsNetwork(true);
+      }
+    };
+    checkNetwork();
+  }, [admins, account, chainId]);
 
   return (
     <header className={styles.header}>
@@ -59,27 +77,37 @@ const Header = (props) => {
               </Button>
             )}
 
-            {account ? (
-              <a
-                href={
-                  config[chainId]
-                    ? `${config[chainId].explorerURL}/address/${account}`
-                    : `#`
-                }
-                target="_blank"
-                rel="noreferrer"
-                className={styles.wallet}
-              >
-                {account.slice(0, 5) + "..." + account.slice(38, 42)}
-                <Blockies seed={account} className={styles.blockies} />
-              </a>
+            {network ? (
+              account ? (
+                <a
+                  href={
+                    config[chainId]
+                      ? `${config[chainId].explorerURL}/address/${account}`
+                      : `#`
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.wallet}
+                >
+                  {account.slice(0, 5) + "..." + account.slice(38, 42)}
+                  <Blockies seed={account} className={styles.blockies} />
+                </a>
+              ) : (
+                <Button
+                  variant="contained"
+                  className={styles.button}
+                  onClick={handleConnect}
+                >
+                  Connect Wallet
+                </Button>
+              )
             ) : (
               <Button
                 variant="contained"
                 className={styles.button}
-                onClick={handleConnect}
+                onClick={handleSwitchNetwork}
               >
-                Connect Wallet
+                Switch Network
               </Button>
             )}
           </div>
