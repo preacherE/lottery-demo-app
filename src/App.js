@@ -2,6 +2,7 @@ import Header from "./components/Header";
 import Main from "./components/Main";
 import Footer from "./components/Footer";
 import ModalTicket from "./components/Main/ModalTicket";
+import ModalAdmin from "./components/Main/ModalAdmin";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
@@ -20,13 +21,19 @@ const styles = {
 const App = () => {
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
+  const [openModalAdmin, setOpenModalAdmin] = useState(false);
   const handlModaleOpen = () => setOpenModal(true);
   const handlModaleClose = () => setOpenModal(false);
+  const handleModalAdminOpen = () => setOpenModalAdmin(true);
+  const hadnleModalAdminClose = () => setOpenModalAdmin(false);
 
   const props = {
     openModal,
     handlModaleOpen,
     handlModaleClose,
+    openModalAdmin,
+    handleModalAdminOpen,
+    hadnleModalAdminClose
   };
 
   const loadBlockchainData = async () => {
@@ -52,9 +59,10 @@ const App = () => {
 
   return (
     <div className={styles.app}>
-      <Header />
+      <Header {...props}/>
       <Main {...props} />
       <ModalTicket {...props} />
+      <ModalAdmin {...props} />
       <Footer />
     </div>
   );
